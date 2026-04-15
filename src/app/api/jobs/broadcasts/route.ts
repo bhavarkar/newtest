@@ -1,6 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendTemplateMessage } from "@/lib/meta/whatsapp";
-import { decryptToken } from "@/lib/encryption";
+import { decrypt } from "@/lib/encryption";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
           throw new Error("Missing tenant WhatsApp credentials");
         }
 
-        const accessToken = decryptToken(tenant.whatsapp_token);
+        const accessToken = decrypt(tenant.whatsapp_token);
         
         // Mark as processing (using 'sent' temporarily, or you could add 'processing' to BroadcastStatus)
         await admin.from("broadcasts").update({ status: "sent" }).eq("id", broadcast.id);
